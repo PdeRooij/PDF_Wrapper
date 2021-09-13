@@ -43,6 +43,35 @@ class PDFWrapper:
         else:
             self.pdf = pdfplumber.open(path)
 
+    def extract_fields_values(self, filled_path):
+        """
+        Puts names (key) and values (value) of all form fields in a pdf into a dictionary.
+        Note that fields without a value have None as dictionary value.
+
+        Args:
+            filled_path (str): Location of the PDF to extract fields and values from.
+
+        Returns:
+            dict: Dictionary of fields and values, where field names are keys.
+        """
+        # Prepare dictionary
+        fields = {}
+
+        # Read PDF and extract form field names and values
+        filled = pdfrw.PdfReader(filled_path)
+        for page in filled.pages:
+            annotations = page[self.ANNOT_KEY]
+            for annotation in annotations:
+                if annotation[self.SUBTYPE_KEY] == self.WIDGET_SUBTYPE_KEY:
+                    if annotation[self.ANNOT_FIELD_KEY]:
+                        if annotation[self.ANNOT_VAL_KEY]:
+                            fields[annotation[self.ANNOT_FIELD_KEY][1:-1]] = annotation[self.ANNOT_VAL_KEY]
+                        else:
+                            fields[annotation[self.ANNOT_FIELD_KEY][1:-1]] = None
+
+        # Return extracted field names and values
+        return fields
+
     def fill_pdf(self, template_path, output_path, field_value_dict):
         template_pdf = pdfrw.PdfReader(template_path)
         for page in template_pdf.pages:
