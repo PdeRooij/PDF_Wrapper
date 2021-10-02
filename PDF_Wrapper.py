@@ -65,7 +65,7 @@ class PDFWrapper:
                 if annotation[self.SUBTYPE_KEY] == self.WIDGET_SUBTYPE_KEY:
                     if annotation[self.ANNOT_FIELD_KEY]:
                         if annotation[self.ANNOT_VAL_KEY]:
-                            fields[annotation[self.ANNOT_FIELD_KEY][1:-1]] = annotation[self.ANNOT_VAL_KEY]
+                            fields[annotation[self.ANNOT_FIELD_KEY][1:-1]] = annotation[self.ANNOT_VAL_KEY][1:-1]
                         else:
                             fields[annotation[self.ANNOT_FIELD_KEY][1:-1]] = None
 
